@@ -15,7 +15,7 @@ namespace StateMachine.Library
             _transitions = new List<StateMachineTransition>();
         }
 
-        public Machine GetMachine(TState state)
+        public Machine Create(TState state)
         {
             return new Machine(state, _transitions);
         }
@@ -67,23 +67,21 @@ namespace StateMachine.Library
             }
 
 
-            public bool CommandIsValid(TCommand command)
+            public bool TransitionIsValid(TCommand command)
             {
                 return _transitions.Any(f => f.Match(CurrentState, command));                
             }
 
-            public TState MoveNextState(TCommand command)
+            public TState MoveNext(TCommand command)
             {
-                CurrentState = GetNextState(command);
-
-                return CurrentState;
+                return CurrentState = GetNextState(command);
             }
 
             private TState GetNextState(TCommand command)
             {
                 var transition = _transitions.FirstOrDefault(f => f.Match(CurrentState, command));
                 if (transition == null)
-                    throw new Exception($"Invalid current state transition. Current State: {CurrentState}. Command: {command}");
+                    throw new Exception($"Invalid state transition. Current State: {CurrentState}. Command: {command}");
 
                 transition.ToExecute?.Invoke();
 

@@ -24,9 +24,9 @@ namespace StateMachine
     {
         public static void Main()
         {
-            var machine = new StateMachine<State, Command>();
+            var stateMachine = new StateMachine<State, Command>();
 
-            machine
+            stateMachine
                 .In(State.Inactive).On(Command.Begin).MoveTo(State.Active)
                 .In(State.Active).On(Command.Pause).MoveTo(State.Paused)
                 .In(State.Paused).On(Command.Resume).MoveTo(State.Active).ThenExecute(() => Console.WriteLine("==> Resume called... <=="))
@@ -34,31 +34,31 @@ namespace StateMachine
                 .In(State.Paused).On(Command.End).MoveTo(State.Inactive)
                 .In(State.Inactive).On(Command.Exit).MoveTo(State.Terminated).ThenExecute(() => Console.WriteLine("==> Exit called... <=="));
 
-            var p = machine.GetMachine(State.Inactive);
-            var r = machine.GetMachine(State.Paused);
-            var s = machine.GetMachine(State.Terminated);
+            var p = stateMachine.Create(State.Inactive);
+            var r = stateMachine.Create(State.Paused);
+            var s = stateMachine.Create(State.Terminated);
 
             Console.WriteLine($"Initial State = {p.CurrentState}");
-            Console.WriteLine($"Begin = {p.CurrentState} -> {p.MoveNextState(Command.Begin)}");
-            Console.WriteLine($"Pause = {p.CurrentState} -> {p.MoveNextState(Command.Pause)}");
-            Console.WriteLine($"End = {p.CurrentState} -> {p.MoveNextState(Command.End)}");
-            Console.WriteLine($"Exit = {p.CurrentState} -> {p.MoveNextState(Command.Exit)}");
+            Console.WriteLine($"Begin = {p.CurrentState} -> {p.MoveNext(Command.Begin)}");
+            Console.WriteLine($"Pause = {p.CurrentState} -> {p.MoveNext(Command.Pause)}");
+            Console.WriteLine($"End = {p.CurrentState} -> {p.MoveNext(Command.End)}");
+            Console.WriteLine($"Exit = {p.CurrentState} -> {p.MoveNext(Command.Exit)}");
 
             Console.WriteLine("---------------------------------------------------------------------");
 
             Console.WriteLine($"Initial State = {r.CurrentState}");
-            Console.WriteLine($"Resume = {r.MoveNextState(Command.Resume)}");
-            Console.WriteLine($"End = {r.MoveNextState(Command.End)}");
-            Console.WriteLine($"Exit = {r.MoveNextState(Command.Exit)}");
+            Console.WriteLine($"Resume = {r.MoveNext(Command.Resume)}");
+            Console.WriteLine($"End = {r.MoveNext(Command.End)}");
+            Console.WriteLine($"Exit = {r.MoveNext(Command.Exit)}");
 
             Console.WriteLine("---------------------------------------------------------------------");
 
             Console.WriteLine($"Initial State = {s.CurrentState}");
-            Console.WriteLine($"Begin can be fired = {s.CommandIsValid(Command.Begin)}");
+            Console.WriteLine($"Begin can be fired = {s.TransitionIsValid(Command.Begin)}");
 
             try
             {
-                s.MoveNextState(Command.Begin);
+                s.MoveNext(Command.Begin);
             }
             catch (Exception e)
             {

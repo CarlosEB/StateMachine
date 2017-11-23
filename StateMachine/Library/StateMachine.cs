@@ -20,7 +20,6 @@ namespace StateMachine.Library
             return new Machine(state, _transitions);
         }
 
-
         public void AddTransition(TCommand commnad, TState currentState, TState nextState)
         {
             _transitions.Add(new StateMachineTransition(currentState, nextState, commnad));
@@ -46,11 +45,10 @@ namespace StateMachine.Library
 
         public StateMachine<TState, TCommand> ThenExecute(Action toExecute)
         {
-            if (_transitions.Any())
-            {
-                var transition = _transitions.Last();
-                transition.ToExecute = toExecute;
-            }
+            if (!_transitions.Any()) return this;
+
+            _transitions.Last().ToExecute = toExecute;
+
             return this;
         }
 
@@ -66,7 +64,6 @@ namespace StateMachine.Library
                 CurrentState = state;
             }
 
-
             public bool TransitionIsValid(TCommand command)
             {
                 return _transitions.Any(f => f.Match(CurrentState, command));                
@@ -80,6 +77,7 @@ namespace StateMachine.Library
             private TState GetNextState(TCommand command)
             {
                 var transition = _transitions.FirstOrDefault(f => f.Match(CurrentState, command));
+
                 if (transition == null)
                     throw new Exception($"Invalid state transition. Current State: {CurrentState}. Command: {command}");
 

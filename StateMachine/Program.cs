@@ -30,8 +30,8 @@ namespace StateMachine
                 .In(State.Active).On(Command.Pause).MoveTo(State.Paused)
                 .In(State.Active).On(Command.End).MoveTo(State.Inactive)
 
-                .In(State.Paused).On(Command.Resume).MoveTo(State.Active)
-                .ThenExecute(() => Console.WriteLine("==> Resume called... <==")).In(State.Paused).On(Command.End).MoveTo(State.Inactive)
+                .In(State.Paused).On(Command.Resume).MoveTo(State.Active).ThenExecute(() => Console.WriteLine("==> Resume called... <=="))
+                .In(State.Paused).On(Command.End).MoveTo(State.Inactive)
 
                 .In(State.Inactive).On(Command.Begin).MoveTo(State.Active)
                 .In(State.Inactive).On(Command.Exit).MoveTo(State.Terminated).ThenExecute(() => Console.WriteLine("==> Exit called... <=="));

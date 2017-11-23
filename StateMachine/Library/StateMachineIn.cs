@@ -4,20 +4,20 @@ using System.Linq;
 
 namespace StateMachine.Library
 {
-    public class StateMachine<TState, TCommand> : IStateMachineIn<TState, TCommand>, IStateMachineOn<TState, TCommand>, IStateMachineMoveTo<TState, TCommand> where TState : struct, IConvertible where TCommand : struct, IConvertible
+    public class StateMachineIn<TState, TCommand> : IStateMachineOn<TState, TCommand>, IStateMachineMoveTo<TState, TCommand>, IStateMachineInThenExecute<TState, TCommand> where TState : struct, IConvertible where TCommand : struct, IConvertible
     {
         private readonly IList<StateMachineTransition> _transitions;
         private TState _currentState;
         private TCommand _actualCommand;
 
-        private StateMachine()
+        private StateMachineIn()
         {
             _transitions = new List<StateMachineTransition>();
         }
 
-        public static IStateMachine<TState, TCommand> Initialize()
+        public static IStateMachineIn<TState, TCommand> Initialize()
         {
-            return new StateMachine<TState, TCommand>();
+            return new StateMachineIn<TState, TCommand>();
         }
 
         public Machine Create(TState state)
@@ -25,25 +25,25 @@ namespace StateMachine.Library
             return new Machine(state, _transitions);
         }
 
-        public IStateMachineIn<TState, TCommand> In(TState currentState)
+        public IStateMachineOn<TState, TCommand> In(TState currentState)
         {
             _currentState = currentState;
             return this;
         }
 
-        public IStateMachineOn<TState, TCommand> On(TCommand actualCommand)
+        public IStateMachineMoveTo<TState, TCommand> On(TCommand actualCommand)
         {
             _actualCommand = actualCommand;
             return this;
         }
 
-        public IStateMachineMoveTo<TState, TCommand> MoveTo(TState nextState)
+        public IStateMachineInThenExecute<TState, TCommand> MoveTo(TState nextState)
         {
             AddTransition(_actualCommand, _currentState, nextState);
             return this;
         }
 
-        IStateMachine<TState, TCommand> IStateMachineMoveTo<TState, TCommand>.ThenExecute(Action toExecute)
+        IStateMachineIn<TState, TCommand> IStateMachineInThenExecute<TState, TCommand>.ThenExecute(Action toExecute)
         {
             if (!_transitions.Any()) return this;
 

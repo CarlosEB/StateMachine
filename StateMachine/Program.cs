@@ -24,7 +24,7 @@ namespace StateMachine
     {
         public static void Main()
         {
-            var stateMachine = StateMachine<State, Command>.Initialize();
+            var stateMachine = StateMachineIn<State, Command>.Initialize();
 
             stateMachine
                 .In(State.Active).On(Command.Pause).MoveTo(State.Paused)

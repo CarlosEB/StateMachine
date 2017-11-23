@@ -7,6 +7,7 @@ namespace StateMachine.Library
     public class StateMachine<TState, TCommand> : IStateMachineOn<TState, TCommand>, IStateMachineMoveTo<TState, TCommand>, IStateMachineInThenExecute<TState, TCommand> where TState : struct, IConvertible where TCommand : struct, IConvertible
     {
         private readonly IList<StateMachineTransition> _transitions;
+
         private TState _currentState;
         private TCommand _actualCommand;
 
@@ -20,7 +21,7 @@ namespace StateMachine.Library
             return new StateMachine<TState, TCommand>();
         }
 
-        public Machine MakeMachine(TState state)
+        public Machine BuildMachine(TState state)
         {
             return new Machine(state, _transitions);
         }

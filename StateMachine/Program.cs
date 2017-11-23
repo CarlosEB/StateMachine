@@ -36,9 +36,9 @@ namespace StateMachine
                 .In(State.Inactive).On(Command.Begin).MoveTo(State.Active)
                 .In(State.Inactive).On(Command.Exit).MoveTo(State.Terminated).ThenExecute(() => Console.WriteLine("==> Exit called... <=="));
 
-            var machine1 = stateMachine.MakeMachine(State.Inactive);
-            var machine2 = stateMachine.MakeMachine(State.Paused);
-            var machine3 = stateMachine.MakeMachine(State.Terminated);
+            var machine1 = stateMachine.BuildMachine(State.Inactive);
+            var machine2 = stateMachine.BuildMachine(State.Paused);
+            var machine3 = stateMachine.BuildMachine(State.Terminated);
 
             Console.WriteLine($"Initial State = {machine1.CurrentState}");
             Console.WriteLine($"Begin = {machine1.CurrentState} -> {machine1.MoveNext(Command.Begin)}");

@@ -4,8 +4,7 @@ namespace StateMachine.Library
 {
     public interface IStateMachineIn<TState, TCommand> where TState : struct, IConvertible where TCommand : struct, IConvertible
     {
-        StateMachine<TState, TCommand>.Machine MakeMachine(TState state);
-
+        StateMachine<TState, TCommand>.Machine BuildMachine(TState state);
         IStateMachineOn<TState, TCommand> In(TState currentState);
     }
 

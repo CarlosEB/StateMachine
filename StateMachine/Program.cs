@@ -24,7 +24,7 @@ namespace StateMachine
     {
         public static void Main()
         {
-            var stateMachine = new StateMachine<State, Command>();
+            var stateMachine = StateMachine<State, Command>.Initialize();
 
             stateMachine
                 .In(State.Active).On(Command.Pause).MoveTo(State.Paused)
@@ -35,7 +35,6 @@ namespace StateMachine
 
                 .In(State.Inactive).On(Command.Begin).MoveTo(State.Active)
                 .In(State.Inactive).On(Command.Exit).MoveTo(State.Terminated).ThenExecute(() => Console.WriteLine("==> Exit called... <=="));
-
 
             var machine1 = stateMachine.Create(State.Inactive);
             var machine2 = stateMachine.Create(State.Paused);

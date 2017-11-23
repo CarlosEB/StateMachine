@@ -4,23 +4,23 @@ using System.Linq;
 
 namespace StateMachine.Library
 {
-    public class StateMachineIn<TState, TCommand> : IStateMachineOn<TState, TCommand>, IStateMachineMoveTo<TState, TCommand>, IStateMachineInThenExecute<TState, TCommand> where TState : struct, IConvertible where TCommand : struct, IConvertible
+    public class StateMachine<TState, TCommand> : IStateMachineOn<TState, TCommand>, IStateMachineMoveTo<TState, TCommand>, IStateMachineInThenExecute<TState, TCommand> where TState : struct, IConvertible where TCommand : struct, IConvertible
     {
         private readonly IList<StateMachineTransition> _transitions;
         private TState _currentState;
         private TCommand _actualCommand;
 
-        private StateMachineIn()
+        private StateMachine()
         {
             _transitions = new List<StateMachineTransition>();
         }
 
-        public static IStateMachineIn<TState, TCommand> Initialize()
+        public static IStateMachineIn<TState, TCommand> Create()
         {
-            return new StateMachineIn<TState, TCommand>();
+            return new StateMachine<TState, TCommand>();
         }
 
-        public Machine Create(TState state)
+        public Machine MakeMachine(TState state)
         {
             return new Machine(state, _transitions);
         }

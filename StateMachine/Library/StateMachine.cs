@@ -33,7 +33,7 @@ namespace StateMachine.Library
             return this;
         }
 
-        public IStateMachineMoveTo<TState, TCommand> On(TCommand actualCommand)
+        public IStateMachineMoveTo<TState, TCommand> When(TCommand actualCommand)
         {
             _actualCommand = actualCommand;
             return this;
@@ -42,6 +42,15 @@ namespace StateMachine.Library
         public IStateMachineInThenExecute<TState, TCommand> MoveTo(TState nextState)
         {
             AddTransition(_actualCommand, _currentState, nextState);
+            return this;
+        }
+
+        public IStateMachineIn<TState, TCommand> If(Func<bool> toExecute)
+        {
+            if (!_transitions.Any()) return this;
+
+            _transitions.Last().If = toExecute;
+
             return this;
         }
 
@@ -91,6 +100,10 @@ namespace StateMachine.Library
 
                 transition.ToExecute?.Invoke();
 
+                var guard = transition.If?.Invoke();
+                if (guard.HasValue && guard.Value == false)
+                    return CurrentState;
+
                 return transition.NextState;
             }
         }
@@ -101,6 +114,8 @@ namespace StateMachine.Library
             private readonly TCommand _command;
 
             public Action ToExecute { get; set; }
+
+            public Func<bool> If { get; set; }
 
             public TState NextState { get; }
 

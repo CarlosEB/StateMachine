@@ -42,8 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library\IStateMachineIn.cs" />
-    <Compile Include="Library\StateMachineIn.cs" />
+    <Compile Include="Library\IStateMachine.cs" />
+    <Compile Include="Library\StateMachine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

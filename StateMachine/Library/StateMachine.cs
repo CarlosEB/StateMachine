@@ -23,6 +23,7 @@ namespace StateMachine.Library
 
         public Machine BuildMachine(TState state)
         {
+            if (!_transitions.Any()) throw new NullReferenceException("No transitions mapped");
             return new Machine(state, _transitions);
         }
 
